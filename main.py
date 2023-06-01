@@ -1,7 +1,7 @@
 #%%
 from micro_ch_pre import micro_ch_pre
 from laplacian import laplacian
-from free_energy_ch_v2 import free_energy_ch_v2
+from free_energy_ch import free_energy_ch
 from scipy.sparse import csr_matrix
 import file_operator
 import numpy as np
@@ -31,7 +31,7 @@ grad = laplacian(nx, ny, dx, dy)
 file_operator.mkdir("result")
 for istep in range(0, nstep):
   ttime = ttime + dtime
-  dfdconf = free_energy_ch_v2(con, 1.0)
+  dfdconf = free_energy_ch(con, 1.0)
 
   lap_con = grad.dot(con)
   lap_con2 = lap_con.multiply(grad_coef)
