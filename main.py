@@ -1,7 +1,7 @@
 #%%
-from micro_ch_pre import micro_ch_pre
+from initial_state import initial_concentration
 from laplacian import laplacian
-from free_energy_ch import free_energy_ch
+from free_energy import get_free_energy
 from scipy.sparse import csr_matrix
 import file_operator
 import numpy as np
@@ -10,7 +10,7 @@ nx: int = 64
 ny: int = 64
 nxny: int = nx * ny
 dx: float = 1.0
-dy:float = 1.0
+dy: float = 1.0
 
 nstep: int = 40000
 nprint:int = 100
@@ -24,14 +24,14 @@ grad_coef: float = 0.5
 seed: int = 1
 noise: float = 0.02
 
-ncon = micro_ch_pre (nx, ny, c0, seed, noise)
+ncon = initial_concentration (nx, ny, c0, seed, noise)
 con: csr_matrix = csr_matrix(ncon).transpose()
 grad = laplacian(nx, ny, dx, dy)
 
 file_operator.mkdir("result")
 for istep in range(0, nstep):
   ttime = ttime + dtime
-  dfdconf = free_energy_ch(con, 1.0)
+  dfdconf = get_free_energy(con, 1.0)
 
   lap_con = grad.dot(con)
   lap_con2 = lap_con.multiply(grad_coef)
@@ -40,7 +40,7 @@ for istep in range(0, nstep):
 
   con = csr_matrix(con.data + dtime * mobility * lap_con2.data).transpose()
 
-  # add random
+  # add random noise for each step
   con.data = con.data + (0.5 - np.random.rand(nxny)) * noise
 
   if (istep % nprint == 0) or (istep == 1):
