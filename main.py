@@ -12,23 +12,37 @@ nxny: int = nx * ny
 dx: float = 1.0
 dy: float = 1.0
 
-nstep: int = 40000
+nstep: int = 10000
 nprint:int = 100
 dtime: float = 0.01
 ttime: float = 0.0
 
-c0: float = 0.50
+c0: float = 0.5
 mobility: float = 1.0
 grad_coef: float = 0.5
 
 seed: int = 1
-noise: float = 0.02
+noise: float = 0.002
 
 ncon = initial_concentration (nx, ny, c0, seed, noise)
 con: csr_matrix = csr_matrix(ncon).transpose()
 grad = laplacian(nx, ny, dx, dy)
 
-file_operator.mkdir("result")
+# make save environment
+save_dir_name: str = f"{file_operator.format_current_datetime()}"
+file_operator.mkdir(f"result/{save_dir_name}")
+
+# make parameter_info
+param_info:str = file_operator.to_str_from_dir_variables(
+   [{'date': save_dir_name}, {'nx': nx}, {'ny': ny}, {'dx': dx}, {'dy': dy},
+    {'nstep': nstep}, {'nprint': nprint}, {'dtime': dtime}, {'ttime': ttime},
+    {'c0': c0}, {'mobility': mobility}, {'grad_coef': grad_coef},{'seed': seed}, {'noise': noise} ]
+)
+file_operator.save_as_txt(param_info, f"result/{save_dir_name}/info.txt")
+file_operator.add_data_to_json({"file": save_dir_name, "done": False}, "result/done.json")
+
+np.random.seed(seed + 1)
+
 for istep in range(0, nstep):
   ttime = ttime + dtime
   dfdconf = get_free_energy(con, 1.0)
@@ -45,7 +59,7 @@ for istep in range(0, nstep):
 
   if (istep % nprint == 0) or (istep == 1):
     res = con.toarray()
-    file_operator.save_as_csv(res.reshape((nx,ny)), f"result/res_{istep}.csv")
+    file_operator.save_as_csv(res.reshape((nx,ny)), f"result/{save_dir_name}/res_{istep}.csv")
     print(f'done step {istep}')
 
 # test
