@@ -1,6 +1,6 @@
 #%%
 from initial_state import initial_concentration
-from laplacian import laplacian
+import laplacian
 from free_energy import get_free_energy
 from scipy.sparse import csr_matrix
 import file_operator
@@ -19,19 +19,20 @@ nprint:int = 100
 dtime: float = 0.01
 ttime: float = 0.0
 
-c0: float = 0.4
-mobility: float = 4.0
+c0: float = 0.5
+mobility: float = 1.0
 grad_coef: float = 0.5
 
 seed: int = 1
 noise: float = 0.002
 initial_noise: float = 0.002
 
-eta: float = 1.0
+eta: float = 2.0
 
 ncon = initial_concentration (nx, ny, c0, seed, initial_noise)
 con: csr_matrix = csr_matrix(ncon).transpose()
-grad = laplacian(nx, ny, dx, dy, eta)
+grad_eta = laplacian.laplacian_eta(nx, ny, dx, dy, eta)
+grad = laplacian.laplacian(nx, ny, dx, dy)
 
 # make save environment
 save_dir_name: str = f"{file_operator.format_current_datetime()}"
@@ -45,6 +46,7 @@ param_info:str = file_operator.to_str_from_dir_variables(
     {'eta': eta} ]
 )
 file_operator.save_as_txt(param_info, f"result/{save_dir_name}/info.txt")
+file_operator.save_as_txt(param_info, f"make_plot/gif/{save_dir_name}_info.txt")
 
 np.random.seed(seed + 1)
 
@@ -56,7 +58,7 @@ for istep in range(0, nstep):
     print(con)
     raise ValueError("computation failed because con include nan")
 
-  lap_con = grad.dot(con)
+  lap_con = grad_eta.dot(con)
   if (len(lap_con.data) != nxny):
     lap_con = check.fix_zero_csr_matrix(lap_con, (-0.0001, 0.0001), 0.0001)
 

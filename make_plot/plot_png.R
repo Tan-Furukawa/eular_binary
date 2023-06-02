@@ -1,7 +1,8 @@
 library(fields)
 library(dplyr)
+library(RColorBrewer)
 
-pallette <- colorRampPalette(c("white", "black"))(100)
+pallette <- colorRampPalette(c("#9E0142", "#FFFFBF", "#5E4FA2"))(100)
 
 create_color_gradient_maker <- function(pallette) {
     return (function (value) {
@@ -27,7 +28,7 @@ make_png <- function (files, save_dir) {
     print("making png")
     for (f in files) {
         if (grepl("\\.txt$", f, ignore.case = TRUE)) next
-        dat <- as.matrix(read.csv(f, header = F))
+        dat <- as.matrix(read.csv(f, header = F)) %>% t
         cat(".")
         colors <- dat %>% sort %>% filter_data %>% sapply (get_color)
         name <- gsub(".*/([^/]+)\\..*", "\\1", f)

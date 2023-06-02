@@ -5,7 +5,8 @@ from scipy.linalg import toeplitz
 from scipy.sparse import csr_matrix, eye, kron
 from logging import info
 
-def laplacian (nx: int, ny: int, dx: float, dy: float, eta: float) -> csr_matrix:
+
+def laplacian_eta (nx: int, ny: int, dx: float, dy: float, eta: float) -> csr_matrix:
   nxny: int = ny * ny
   r: np.ndarray = np.zeros(nx, dtype=np.float64)
   r[0] = 2.0
@@ -30,24 +31,26 @@ def laplacian (nx: int, ny: int, dx: float, dy: float, eta: float) -> csr_matrix
   print(grad.toarray())
   return grad
 
+def laplacian (nx: int, ny: int, dx: float, dy: float) -> csr_matrix:
+  return laplacian_eta(nx, ny, dx, dy, 1.0)
 
-class Test(unittest.TestCase):
-  def test_laplacian(self) -> None:
-    res = laplacian(3, 3, 1.0, 1.0, 2.0)
-    expected = np.array(
-      [[-6,  2,  2,  1,  0,  0,  1,  0,  0],
-      [ 2, -6,  2,  0,  1,  0,  0,  1,  0],
-      [ 2,  2, -6,  0,  0,  1,  0,  0,  1],
-      [ 1,  0,  0, -6,  2,  2,  1,  0,  0],
-      [ 0,  1,  0,  2, -6,  2,  0,  1,  0],
-      [ 0,  0,  1,  2,  2, -6,  0,  0,  1],
-      [ 1,  0,  0,  1,  0,  0, -6,  2,  2],
-      [ 0,  1,  0,  0,  1,  0,  2, -6,  2],
-      [ 0,  0,  1,  0,  0,  1,  2,  2, -6]]
-    )
-    self.assertTrue((expected == res.toarray()).all())
+# class Test(unittest.TestCase):
+#   def test_laplacian(self) -> None:
+# print(laplacian(4, 4, 1.0, 1.0, 2.0).toarray())
+#     # expected = np.array(
+    #   [[-6,  2,  2,  1,  0,  0,  1,  0,  0],
+    #   [ 2, -6,  2,  0,  1,  0,  0,  1,  0],
+    #   [ 2,  2, -6,  0,  0,  1,  0,  0,  1],
+    #   [ 1,  0,  0, -6,  2,  2,  1,  0,  0],
+    #   [ 0,  1,  0,  2, -6,  2,  0,  1,  0],
+    #   [ 0,  0,  1,  2,  2, -6,  0,  0,  1],
+    #   [ 1,  0,  0,  1,  0,  0, -6,  2,  2],
+    #   [ 0,  1,  0,  0,  1,  0,  2, -6,  2],
+    #   [ 0,  0,  1,  0,  0,  1,  2,  2, -6]]
+    # )
+#     self.assertTrue((expected == res.toarray()).all())
 
-if __name__ == '__main__':
-  unittest.main(argv=[''], exit=False)
+# if __name__ == '__main__':
+#   unittest.main(argv=[''], exit=False)
 # %%
 

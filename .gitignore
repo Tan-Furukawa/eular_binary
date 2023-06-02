@@ -3,7 +3,7 @@ __pycache__
 .vscode
 result/
 make_plot/.Rproj.user
-make_plot/gif/*.gif
+make_plot/gif/
 make_plot/png/
 make_plot/.RData
 make_plot/.Rhistory
