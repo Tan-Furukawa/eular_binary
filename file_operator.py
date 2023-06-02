@@ -77,10 +77,8 @@ def add_data_to_json(data: Dict[str,Any],json_file: str) -> None:
     else:
         json_data = []
 
-    # データを追加
     json_data.append(data)
 
-    # JSONファイルへの書き込み
     with open(json_file, 'w', encoding='utf-8') as file:
         json.dump(json_data, file, indent=4)
 
