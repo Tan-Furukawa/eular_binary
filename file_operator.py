@@ -28,9 +28,6 @@ def save_as_csv(data: np.ndarray, file_path: str) -> None:
         writer = csv.writer(file)
         writer.writerows(data)
 
-    print(f"{file_path} :save as csv")
-
-
 def delete_directory_contents(path: str, exclude_files: List[str]) -> None:
     for root, dirs, files in os.walk(path):
         # delete file
