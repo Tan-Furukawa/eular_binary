@@ -1,9 +1,10 @@
 __pycache__
 .mypy_cache
 .vscode
-result/*.csv
+result/
 make_plot/.Rproj.user
 make_plot/gif/*.gif
-make_plot/png/*.png
+make_plot/png/
 make_plot/.RData
 make_plot/.Rhistory
+.Rproj.user
