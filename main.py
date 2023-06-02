@@ -24,9 +24,11 @@ grad_coef: float = 0.5
 seed: int = 1
 noise: float = 0.002
 
+eta: float = 5.0
+
 ncon = initial_concentration (nx, ny, c0, seed, noise)
 con: csr_matrix = csr_matrix(ncon).transpose()
-grad = laplacian(nx, ny, dx, dy)
+grad = laplacian(nx, ny, dx, dy, eta)
 
 # make save environment
 save_dir_name: str = f"{file_operator.format_current_datetime()}"
